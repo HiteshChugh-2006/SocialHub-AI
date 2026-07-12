@@ -1,0 +1,100 @@
+/* Home.module.css */
+
+.page {
+  min-height: calc(100vh - 70px);
+  padding: var(--space-10) var(--space-6) var(--space-16);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-12);
+}
+
+/* ── Hero section ───────────────────────────────────────────────── */
+.hero {
+  text-align: center;
+  max-width: 640px;
+  animation: fadeInUp 0.6s ease;
+}
+
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  background: rgba(108, 99, 255, 0.12);
+  border: 1px solid rgba(108, 99, 255, 0.25);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-primary);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-5);
+}
+
+.heroTitle {
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  margin-bottom: var(--space-4);
+}
+
+.heroGradient {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 60%, #FFD166 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.heroSub {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* ── Platform badges strip ──────────────────────────────────────── */
+.platformStrip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-top: var(--space-6);
+}
+
+.stripBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  border: 1px solid var(--platform-color, var(--color-border));
+  color: var(--platform-color, var(--color-text));
+  background: rgba(var(--platform-color-rgb, 108, 99, 255), 0.07);
+  transition: transform var(--transition-fast), background var(--transition-normal);
+}
+
+.stripBadge:hover {
+  transform: translateY(-2px);
+  background: rgba(var(--platform-color-rgb, 108, 99, 255), 0.14);
+}
+
+/* ── Composer section ───────────────────────────────────────────── */
+.composerSection {
+  width: 100%;
+  max-width: 780px;
+  animation: fadeInUp 0.7s 0.1s ease both;
+}
+
+/* ── Future dashboard preview slot ─────────────────────────────── */
+/* Future: .statsRow, .feedRow – Exp: Dashboard, Analytics         */
+
+@media (max-width: 640px) {
+  .page { padding: var(--space-6) var(--space-4) var(--space-12); gap: var(--space-8); }
+  .heroSub { font-size: var(--font-size-md); }
+}

@@ -1,0 +1,76 @@
+/* CharacterCounter.css */
+
+.char-counter {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  transition: color var(--transition-normal);
+}
+
+/* ── Status colours ─────────────────────────────────────────────────────────── */
+.char-counter--normal  { color: var(--color-success); }
+.char-counter--warning { color: var(--color-warning); }
+.char-counter--danger  { color: var(--color-danger); }
+
+/* When no platform selected */
+.char-counter:not(.char-counter--warning):not(.char-counter--danger) {
+  color: var(--color-text-secondary);
+}
+
+/* ── Display ──────────────────────────────────────────────────────────────── */
+.char-counter__display {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+  font-variant-numeric: tabular-nums;
+}
+
+.char-counter__current {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+}
+
+.char-counter__separator,
+.char-counter__limit {
+  font-size: var(--font-size-sm);
+  opacity: 0.7;
+}
+
+/* ── Circular Arc ──────────────────────────────────────────────────────────── */
+.char-counter__arc {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.char-counter__circle-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.char-counter__circle-bg {
+  fill: none;
+  stroke: var(--color-bg-input);
+  stroke-width: 3;
+}
+
+.char-counter__circle-fill {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 0 100;
+  transition: stroke-dasharray var(--transition-normal),
+              stroke var(--transition-normal);
+}
+
+/* ── Exceeded label ──────────────────────────────────────────────────────────── */
+.char-counter__label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-danger);
+  animation: pulse 1.5s ease-in-out infinite;
+}

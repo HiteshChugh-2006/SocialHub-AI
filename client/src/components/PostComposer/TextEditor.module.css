@@ -1,0 +1,145 @@
+/* TextEditor.module.css */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.labelRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.label {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ── Textarea wrapper ───────────────────────────────────────────── */
+.textareaWrap {
+  position: relative;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.02);
+  transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.textareaWrap:focus-within {
+  border-color: var(--color-border-focus);
+  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.12);
+}
+
+.textareaWrap.over {
+  border-color: var(--color-error);
+  box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.15);
+}
+
+.textareaWrap.nearLimit {
+  border-color: var(--color-warning);
+  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.12);
+}
+
+.textarea {
+  width: 100%;
+  min-height: 180px;
+  resize: vertical;
+  padding: var(--space-5);
+  padding-bottom: var(--space-10);
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--color-text);
+  font-family: var(--font-family);
+  font-size: var(--font-size-md);
+  line-height: 1.7;
+  caret-color: var(--color-primary);
+}
+
+.textarea::placeholder {
+  color: var(--color-text-faint);
+}
+
+/* ── Stats bar (inside textarea) ───────────────────────────────── */
+.statsBar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: var(--space-3) var(--space-5);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--color-border);
+  background: rgba(8, 8, 18, 0.4);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+/* ── Progress ring / counter ────────────────────────────────────── */
+.counterGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.counter {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.counterIcon {
+  font-size: var(--font-size-md);
+}
+
+.counterValue {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  transition: color var(--transition-fast);
+}
+
+.counterValue.ok       { color: var(--color-success); }
+.counterValue.nearLimit { color: var(--color-warning); }
+.counterValue.over     { color: var(--color-error); }
+
+/* ── Platform mini-counters ─────────────────────────────────────── */
+.platformCounters {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.platformPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  border: 1px solid var(--platform-color, var(--color-border));
+  color: var(--platform-color, var(--color-text-muted));
+  background: rgba(var(--platform-color-rgb, 108, 99, 255), 0.08);
+  font-variant-numeric: tabular-nums;
+}
+
+.platformPill.over {
+  background: rgba(248, 113, 113, 0.15);
+  border-color: var(--color-error);
+  color: var(--color-error);
+}
+
+@media (max-width: 500px) {
+  .platformCounters { display: none; }
+  .textarea { min-height: 140px; }
+}

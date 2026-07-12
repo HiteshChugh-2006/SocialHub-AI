@@ -1,0 +1,137 @@
+/* PlatformCard.css — Selectable platform card styles */
+
+.platform-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: rgba(14,17,28,0.6);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border: 1.5px solid rgba(255,255,255,0.07);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  text-align: left;
+  width: 100%;
+  overflow: hidden;
+}
+
+.platform-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  pointer-events: none;
+}
+
+.platform-card:hover {
+  border-color: rgba(255,255,255,0.14);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+  transform: translateY(-3px);
+}
+
+/* ── Selected State ─────────────────────────────────────────────────────────── */
+.platform-card--selected {
+  border-color: var(--platform-color, var(--color-accent));
+  background: var(--platform-color-dim, var(--color-accent-dim));
+  box-shadow: 0 0 0 1px var(--platform-color, var(--color-accent)),
+              0 4px 16px rgba(0, 0, 0, 0.3);
+}
+.platform-card--selected:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 1px var(--platform-color, var(--color-accent)),
+              0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* ── Check Indicator ──────────────────────────────────────────────────────── */
+.platform-card__check {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-border);
+  background: transparent;
+  transition: all var(--transition-normal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.platform-card--selected .platform-card__check {
+  background: var(--platform-color, var(--color-accent));
+  border-color: var(--platform-color, var(--color-accent));
+  color: #fff;
+  box-shadow: 0 0 8px var(--platform-color, var(--color-accent));
+}
+
+.platform-card__check svg {
+  width: 10px;
+  height: 10px;
+}
+
+/* ── Platform Icon ──────────────────────────────────────────────────────────── */
+.platform-card__icon {
+  width: 32px;
+  height: 32px;
+  color: var(--platform-color, var(--color-accent));
+  transition: transform var(--transition-normal), filter var(--transition-normal);
+}
+.platform-card__icon svg {
+  width: 100%;
+  height: 100%;
+}
+.platform-card:hover .platform-card__icon,
+.platform-card--selected .platform-card__icon {
+  transform: scale(1.05);
+  filter: drop-shadow(0 0 6px var(--platform-color, var(--color-accent)));
+}
+
+/* ── Platform Name ──────────────────────────────────────────────────────────── */
+.platform-card__name {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+/* ── Stats ──────────────────────────────────────────────────────────────────── */
+.platform-card__stats {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+.platform-card__stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.platform-card__stat-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+}
+
+.platform-card__stat-value {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+  text-align: right;
+}
+
+.platform-card__stat-value--small {
+  font-size: 10px;
+  max-width: 110px;
+}
