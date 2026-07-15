@@ -19,7 +19,7 @@ import './Header.css';
 // ─── Nav Items (extend as new pages are added in future experiments) ──────────
 const NAV_ITEMS = [
   { to: '/', label: 'Composer', icon: '✏️' },
-  // Future: { to: '/schedule', label: 'Schedule', icon: '📅' },
+  { to: '/schedule', label: 'Scheduler', icon: '📅' },
   // Future: { to: '/analytics', label: 'Analytics', icon: '📊' },
   // Future: { to: '/team', label: 'Team', icon: '👥' },
 ];

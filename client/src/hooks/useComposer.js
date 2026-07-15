@@ -12,7 +12,8 @@
  * Future experiments can extend it with scheduling, AI suggestions, drafts, etc.
  */
 
-import { useState, useCallback, useMemo, useRef } from 'react';
+import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
+import { STORAGE_KEYS } from '../config/configuration';
 import { createPost } from '../services/api';
 import {
   countHashtags,
@@ -32,13 +33,39 @@ const useComposer = () => {
   const { addToast } = useApp();
 
   // ── Core state ──────────────────────────────────────────────────────────────
-  const [content, setContent]                   = useState('');
-  const [selectedPlatforms, setSelectedPlatforms] = useState([]);
+  // Initialize from local storage if available
+  const getInitialDraft = () => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEYS.DRAFT_POST);
+      if (saved) {
+        return JSON.parse(saved);
+      }
+    } catch (e) {
+      console.warn('Failed to parse draft from local storage', e);
+    }
+    return { content: '', selectedPlatforms: [], scheduledDate: '' };
+  };
+
+  const initialDraft = getInitialDraft();
+
+  const [content, setContent]                   = useState(initialDraft.content);
+  const [selectedPlatforms, setSelectedPlatforms] = useState(initialDraft.selectedPlatforms);
+  const [scheduledDate, setScheduledDate]       = useState(initialDraft.scheduledDate);
   const [image, setImage]                       = useState(null); // { file, preview, name, size }
   const [video, setVideo]                       = useState(null); // { file, name, size }
   const [isSubmitting, setIsSubmitting]         = useState(false);
 
   const textareaRef = useRef(null);
+
+  // ── Auto-save to Local Storage ──────────────────────────────────────────────
+  useEffect(() => {
+    const draft = {
+      content,
+      selectedPlatforms,
+      scheduledDate,
+    };
+    localStorage.setItem(STORAGE_KEYS.DRAFT_POST, JSON.stringify(draft));
+  }, [content, selectedPlatforms, scheduledDate]);
 
   // ── Derived: character & hashtag counts ────────────────────────────────────
   const charCount    = content.length;
@@ -57,11 +84,16 @@ const useComposer = () => {
 
   // ── Derived: is publish button enabled ─────────────────────────────────────
   const canPublish = useMemo(
-    () =>
-      selectedPlatforms.length > 0 &&
-      content.trim().length > 0 &&
-      isAllValid(validationResults),
-    [selectedPlatforms, content, validationResults]
+    () => {
+      const isPast = scheduledDate ? new Date(scheduledDate) < new Date() : false;
+      return (
+        selectedPlatforms.length > 0 &&
+        content.trim().length > 0 &&
+        isAllValid(validationResults) &&
+        !isPast
+      );
+    },
+    [selectedPlatforms, content, validationResults, scheduledDate]
   );
 
   // ─── Content handler ───────────────────────────────────────────────────────
@@ -129,17 +161,20 @@ const useComposer = () => {
   const removeImage = useCallback(() => setImage(null), []);
   const removeVideo = useCallback(() => setVideo(null), []);
 
-  // ─── Clear form ────────────────────────────────────────────────────────────
+  // ─── Clear form & Delete Draft ─────────────────────────────────────────────
   const handleClear = useCallback(() => {
     setContent('');
     setSelectedPlatforms([]);
+    setScheduledDate('');
     setImage(null);
     setVideo(null);
+    localStorage.removeItem(STORAGE_KEYS.DRAFT_POST);
     // Reset textarea height
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
     }
-  }, []);
+    addToast('Draft deleted from local storage.', 'info');
+  }, [addToast]);
 
   // ─── Copy text ─────────────────────────────────────────────────────────────
   const handleCopy = useCallback(async () => {
@@ -161,27 +196,49 @@ const useComposer = () => {
 
     setIsSubmitting(true);
     try {
-      const formData = new FormData();
-      formData.append('content', content);
-      selectedPlatforms.forEach((p) => formData.append('selectedPlatforms[]', p));
-      if (image?.file) formData.append('image', image.file);
-      if (video?.file) formData.append('video', video.file);
+      if (scheduledDate) {
+        // Teacher requirement: save scheduled posts to local storage mapping
+        const scheduledListRaw = localStorage.getItem(STORAGE_KEYS.SCHEDULED_POSTS);
+        const scheduledList = scheduledListRaw ? JSON.parse(scheduledListRaw) : [];
+        
+        const newScheduledPost = {
+          id: Date.now().toString(),
+          content,
+          selectedPlatforms,
+          scheduledDate,
+          createdAt: new Date().toISOString()
+        };
+        
+        scheduledList.push(newScheduledPost);
+        localStorage.setItem(STORAGE_KEYS.SCHEDULED_POSTS, JSON.stringify(scheduledList));
+        
+        addToast('📅 Post successfully scheduled locally!', 'success');
+        handleClear();
+      } else {
+        // Normal immediate publish via API
+        const formData = new FormData();
+        formData.append('content', content);
+        selectedPlatforms.forEach((p) => formData.append('selectedPlatforms[]', p));
+        if (image?.file) formData.append('image', image.file);
+        if (video?.file) formData.append('video', video.file);
 
-      await createPost(formData);
-      addToast('🎉 Post saved successfully!', 'success');
-      handleClear();
+        await createPost(formData);
+        addToast('🎉 Post published immediately!', 'success');
+        handleClear();
+      }
     } catch (err) {
       addToast(err.message || 'Failed to save post. Please try again.', 'error');
     } finally {
       setIsSubmitting(false);
     }
-  }, [canPublish, isSubmitting, content, selectedPlatforms, image, video, addToast, handleClear]);
+  }, [canPublish, isSubmitting, content, selectedPlatforms, image, video, scheduledDate, addToast, handleClear]);
 
   // ─── Return API ────────────────────────────────────────────────────────────
   return {
     // State
     content,
     selectedPlatforms,
+    scheduledDate,
     image,
     video,
     isSubmitting,
@@ -197,6 +254,7 @@ const useComposer = () => {
 
     // Actions
     handleContentChange,
+    setScheduledDate,
     togglePlatform,
     handleImageUpload,
     handleVideoUpload,

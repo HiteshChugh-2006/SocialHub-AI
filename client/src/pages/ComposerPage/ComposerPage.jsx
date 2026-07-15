@@ -15,6 +15,7 @@ import CharacterCounter from '../../components/CharacterCounter/CharacterCounter
 import HashtagCounter from '../../components/HashtagCounter/HashtagCounter';
 import MediaUpload from '../../components/MediaUpload/MediaUpload';
 import ValidationPanel from '../../components/ValidationPanel/ValidationPanel';
+import DateTimePicker from '../../components/DateTimePicker/DateTimePicker';
 import { PLATFORMS } from '../../utils/constants';
 import './ComposerPage.css';
 
@@ -22,6 +23,7 @@ const ComposerPage = () => {
   const {
     content,
     selectedPlatforms,
+    scheduledDate,
     image,
     video,
     isSubmitting,
@@ -31,6 +33,7 @@ const ComposerPage = () => {
     canPublish,
     textareaRef,
     handleContentChange,
+    setScheduledDate,
     togglePlatform,
     handleImageUpload,
     handleVideoUpload,
@@ -185,6 +188,25 @@ const ComposerPage = () => {
                   onToggle={togglePlatform}
                 />
               ))}
+            </div>
+          </section>
+
+          {/* ── Schedule Post ───────────────────────────────────────── */}
+          <section className="card platform-section" aria-label="Schedule post">
+            <div className="platform-section__header">
+              <h2 className="platform-section__title">
+                <span aria-hidden="true">📅</span>
+                Schedule Post
+              </h2>
+            </div>
+            <div style={{ marginTop: 'var(--space-3)' }}>
+              <DateTimePicker 
+                value={scheduledDate}
+                onChange={(newDate) => setScheduledDate(newDate)}
+              />
+              <p style={{ marginTop: 'var(--space-3)', fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>
+                Leave blank to publish immediately. Draft is auto-saved locally.
+              </p>
             </div>
           </section>
 

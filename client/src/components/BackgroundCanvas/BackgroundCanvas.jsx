@@ -28,13 +28,13 @@ const BackgroundCanvas = () => {
     window.addEventListener('resize', resize);
 
     // ── Particle system ────────────────────────────────────────────────────
-    const PARTICLE_COUNT = 90;
-    const CONNECTION_DIST = 140;
+    const PARTICLE_COUNT = 150;
+    const CONNECTION_DIST = 160;
 
     const palette = [
-      'rgba(79,142,247,',    // blue
+      'rgba(16,185,129,',    // green
       'rgba(162,89,255,',    // purple
-      'rgba(99,202,255,',    // cyan
+      'rgba(34,211,238,',    // cyan
     ];
 
     class Particle {
@@ -42,18 +42,18 @@ const BackgroundCanvas = () => {
       reset(initial = false) {
         this.x  = Math.random() * canvas.width;
         this.y  = initial ? Math.random() * canvas.height : canvas.height + 10;
-        this.vx = (Math.random() - 0.5) * 0.4;
-        this.vy = -(Math.random() * 0.3 + 0.1);
-        this.r  = Math.random() * 2 + 1;
-        this.alpha = Math.random() * 0.6 + 0.2;
+        this.vx = (Math.random() - 0.5) * 0.6;
+        this.vy = -(Math.random() * 0.4 + 0.15);
+        this.r  = Math.random() * 2.5 + 1;
+        this.alpha = Math.random() * 0.7 + 0.3;
         this.color = palette[Math.floor(Math.random() * palette.length)];
         this.pulse = Math.random() * Math.PI * 2;
       }
       update() {
         this.x += this.vx;
         this.y += this.vy;
-        this.pulse += 0.02;
-        this.alpha = (Math.sin(this.pulse) * 0.25 + 0.45);
+        this.pulse += 0.04;
+        this.alpha = (Math.sin(this.pulse) * 0.3 + 0.5);
         if (this.y < -10) this.reset();
       }
       draw() {
@@ -61,6 +61,9 @@ const BackgroundCanvas = () => {
         ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
         ctx.fillStyle = this.color + this.alpha + ')';
         ctx.fill();
+        // Add a slight glow
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = this.color + '0.8)';
       }
     }
 
@@ -74,6 +77,9 @@ const BackgroundCanvas = () => {
       particles.forEach(p => p.update());
       particles.forEach(p => p.draw());
 
+      // Reset shadow for lines
+      ctx.shadowBlur = 0;
+
       // Draw connections between nearby particles
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
@@ -81,12 +87,12 @@ const BackgroundCanvas = () => {
           const dx = a.x - b.x, dy = a.y - b.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < CONNECTION_DIST) {
-            const opacity = (1 - dist / CONNECTION_DIST) * 0.18;
+            const opacity = (1 - dist / CONNECTION_DIST) * 0.35;
             ctx.beginPath();
             ctx.moveTo(a.x, a.y);
             ctx.lineTo(b.x, b.y);
-            ctx.strokeStyle = `rgba(99,162,255,${opacity})`;
-            ctx.lineWidth = 0.8;
+            ctx.strokeStyle = `rgba(16,185,129,${opacity})`;
+            ctx.lineWidth = 1.2;
             ctx.stroke();
           }
         }

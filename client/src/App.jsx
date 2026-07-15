@@ -15,6 +15,7 @@ import Header from './components/Header/Header';
 import Toast from './components/Toast/Toast';
 import BackgroundCanvas from './components/BackgroundCanvas/BackgroundCanvas';
 import ComposerPage from './pages/ComposerPage/ComposerPage';
+import SchedulerPage from './pages/SchedulerPage/SchedulerPage';
 import './styles/global.css';
 
 // ─── Coming Soon placeholder (used for future route stubs) ───────────────────
@@ -57,10 +58,10 @@ const App = () => {
             <Routes>
               {/* ── Active Routes ──────────────────────────────────── */}
               <Route path="/" element={<ComposerPage />} />
+              <Route path="/schedule" element={<SchedulerPage />} />
 
               {/* ── Future Experiment Stubs ─────────────────────────── */}
               {/* Uncomment and implement these routes in future experiments */}
-              {/* <Route path="/schedule"  element={<ComingSoon pageName="Content Scheduler" />} /> */}
               {/* <Route path="/analytics" element={<ComingSoon pageName="Analytics Dashboard" />} /> */}
               {/* <Route path="/team"      element={<ComingSoon pageName="Team Collaboration" />} /> */}
               {/* <Route path="/profile"   element={<ComingSoon pageName="User Profile" />} /> */}
